@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% block title %}Profile – StudyQuest Pro{% endblock %}
+{% block content %}
+<div class="page-header fade-up">
+  <h2>👤 My Profile</h2>
+  <p>Manage your account and track your achievements</p>
+</div>
+
+<div class="row g-4">
+  <!-- Left: Avatar + stats -->
+  <div class="col-md-4 fade-up fade-up-1">
+    <div class="card-g text-center mb-3">
+      <div style="position:relative;display:inline-block;margin-bottom:1rem">
+        {% if profile.profile_picture %}
+          <img src="{{ profile.profile_picture.url }}" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #6366f1;box-shadow:0 0 25px rgba(99,102,241,.4)"/>
+        {% else %}
+          <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#ec4899);display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:800;margin:0 auto;box-shadow:0 0 25px rgba(99,102,241,.4)">
+            {{ user.username|first|upper }}
+          </div>
+        {% endif %}
+        <div style="position:absolute;bottom:0;right:0;background:#6366f1;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.75rem;border:2px solid #1a1d2e">
+          Lv{{ profile.level }}
+        </div>
+      </div>
+      <h5 style="font-family:'Sora',sans-serif;font-weight:800">{{ user.get_full_name|default:user.username }}</h5>
+      <div style="color:#818cf8;font-size:.85rem;margin-bottom:.5rem">{{ profile.get_level_title }}</div>
+      <div style="color:#64748b;font-size:.82rem">@{{ user.username }}</div>
+      {% if profile.bio %}<p style="color:#94a3b8;font-size:.85rem;margin-top:.75rem;border-top:1px solid #2e3250;padding-top:.75rem">{{ profile.bio }}</p>{% endif %}
+    </div>
+
+    <div class="card-g mb-3">
+      <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem">⚡ XP Progress</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:.5rem">
+        <span style="font-size:.85rem;font-weight:600">Level {{ profile.level }}</span>
+        <span style="font-size:.85rem;color:#818cf8">{{ profile.xp_points }} XP</span>
+      </div>
+      <div class="xp-bar-wrap" style="height:10px">
+        <div class="xp-bar-fill" style="width:{{ profile.xp_points|default:0 }}%"></div>
+      </div>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:.4rem">{{ profile.xp_points }} / {{ profile.level }}00 XP to next level</div>
+    </div>
+
+    <div class="card-g">
+      <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem">📊 Stats</div>
+      <div style="display:flex;flex-direction:column;gap:.75rem">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:.85rem;color:#94a3b8">📚 Subjects</span>
+          <span style="font-weight:700;color:#818cf8">{{ stats.total_subjects }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:.85rem;color:#94a3b8">⚔️ Total Tasks</span>
+          <span style="font-weight:700;color:#818cf8">{{ stats.total_tasks }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:.85rem;color:#94a3b8">✅ Completed</span>
+          <span style="font-weight:700;color:#34d399">{{ stats.completed }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:.85rem;color:#94a3b8">🎯 Exams</span>
+          <span style="font-weight:700;color:#fbbf24">{{ stats.total_exams }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:.85rem;color:#94a3b8">🔥 Streak</span>
+          <span style="font-weight:700;color:#f87171">{{ profile.study_streak }} days</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Edit form -->
+  <div class="col-md-8 fade-up fade-up-2">
+    <div class="card-g">
+      <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.5rem">✏️ Edit Profile</div>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label>FIRST NAME</label>
+            {{ form.first_name }}
+          </div>
+          <div class="col-md-6">
+            <label>LAST NAME</label>
+            {{ form.last_name }}
+          </div>
+          <div class="col-12">
+            <label>EMAIL</label>
+            {{ form.email }}
+          </div>
+          <div class="col-md-6">
+            <label>PHONE</label>
+            {{ form.phone }}
+          </div>
+          <div class="col-md-6">
+            <label>PROFILE PICTURE</label>
+            {{ form.profile_picture }}
+          </div>
+          <div class="col-12">
+            <label>BIO</label>
+            {{ form.bio }}
+          </div>
+        </div>
+        <div class="d-flex gap-2 mt-4">
+          <button type="submit" class="btn-glow">💾 Save Changes</button>
+          <a href="{% url 'change_password' %}" class="btn-outline-g text-decoration-none" style="padding:.6rem 1.2rem;display:inline-flex;align-items:center;gap:.4rem;color:var(--muted)">🔐 Change Password</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Achievements -->
+    <div class="card-g mt-3">
+      <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem">🏆 Achievements</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem">
+        {% if stats.total_tasks >= 1 %}<div style="text-align:center;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);border-radius:12px;padding:.75rem"><div style="font-size:1.8rem">⚔️</div><div style="font-size:.7rem;color:#818cf8;margin-top:.25rem">First Quest</div></div>{% endif %}
+        {% if stats.completed >= 5 %}<div style="text-align:center;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:12px;padding:.75rem"><div style="font-size:1.8rem">🌟</div><div style="font-size:.7rem;color:#34d399;margin-top:.25rem">5 Done</div></div>{% endif %}
+        {% if stats.total_subjects >= 3 %}<div style="text-align:center;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:.75rem"><div style="font-size:1.8rem">📚</div><div style="font-size:.7rem;color:#fbbf24;margin-top:.25rem">Scholar</div></div>{% endif %}
+        {% if profile.level >= 2 %}<div style="text-align:center;background:rgba(236,72,153,.1);border:1px solid rgba(236,72,153,.2);border-radius:12px;padding:.75rem"><div style="font-size:1.8rem">🚀</div><div style="font-size:.7rem;color:#f472b6;margin-top:.25rem">Level 2+</div></div>{% endif %}
+        <div style="text-align:center;background:rgba(255,255,255,.03);border:1px dashed #2e3250;border-radius:12px;padding:.75rem"><div style="font-size:1.8rem;opacity:.3">🔒</div><div style="font-size:.7rem;color:#475569;margin-top:.25rem">Locked</div></div>
+        <div style="text-align:center;background:rgba(255,255,255,.03);border:1px dashed #2e3250;border-radius:12px;padding:.75rem"><div style="font-size:1.8rem;opacity:.3">🔒</div><div style="font-size:.7rem;color:#475569;margin-top:.25rem">Locked</div></div>
+        <div style="text-align:center;background:rgba(255,255,255,.03);border:1px dashed #2e3250;border-radius:12px;padding:.75rem"><div style="font-size:1.8rem;opacity:.3">🔒</div><div style="font-size:.7rem;color:#475569;margin-top:.25rem">Locked</div></div>
+        <div style="text-align:center;background:rgba(255,255,255,.03);border:1px dashed #2e3250;border-radius:12px;padding:.75rem"><div style="font-size:1.8rem;opacity:.3">🔒</div><div style="font-size:.7rem;color:#475569;margin-top:.25rem">Locked</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

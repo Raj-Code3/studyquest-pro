@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Exams – StudyQuest Pro{% endblock %}
+{% block content %}
+<div class="page-header d-flex align-items-center justify-content-between fade-up">
+  <div>
+    <h2>🎯 My Exams</h2>
+    <p>Schedule and track your upcoming exams</p>
+  </div>
+  <a href="{% url 'exam_add' %}" class="btn-glow text-decoration-none" style="padding:.65rem 1.25rem">➕ Schedule Exam</a>
+</div>
+
+<div class="card-g fade-up fade-up-1" style="padding:0;overflow:hidden">
+  <table class="table-dark-g" style="width:100%">
+    <thead>
+      <tr>
+        <th style="padding-left:1.25rem">#</th>
+        <th>Exam Name</th>
+        <th>Subject</th>
+        <th>Type</th>
+        <th>Date</th>
+        <th>Location</th>
+        <th style="padding-right:1.25rem">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for exam in exams %}
+      <tr>
+        <td style="padding-left:1.25rem;color:#64748b;font-size:.85rem">{{ forloop.counter }}</td>
+        <td>
+          <div style="font-weight:600;font-size:.9rem">{{ exam.exam_name }}</div>
+          {% if exam.notes %}<div style="font-size:.75rem;color:#64748b;margin-top:.15rem">{{ exam.notes|truncatewords:6 }}</div>{% endif %}
+        </td>
+        <td>
+          <span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.85rem">
+            <span style="width:8px;height:8px;border-radius:50%;background:{{ exam.subject.color }};display:inline-block"></span>
+            {{ exam.subject.icon }} {{ exam.subject.subject_name }}
+          </span>
+        </td>
+        <td>
+          <span style="background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);border-radius:6px;padding:.2rem .6rem;font-size:.75rem;color:#818cf8">
+            {{ exam.exam_type }}
+          </span>
+        </td>
+        <td style="font-weight:600;font-size:.88rem;color:#fbbf24">📅 {{ exam.exam_date }}</td>
+        <td style="font-size:.85rem;color:#94a3b8">{% if exam.location %}📍 {{ exam.location }}{% else %}—{% endif %}</td>
+        <td style="padding-right:1.25rem">
+          <div style="display:flex;gap:.4rem">
+            <a href="{% url 'exam_edit' exam.pk %}" class="btn-outline-g text-decoration-none" style="padding:.3rem .65rem;font-size:.78rem;color:var(--muted)">✏️</a>
+            <a href="{% url 'exam_delete' exam.pk %}" class="btn-danger-g text-decoration-none" style="padding:.3rem .65rem;font-size:.78rem">🗑️</a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7" style="text-align:center;padding:3rem;color:#64748b">
+          <div style="font-size:3rem;margin-bottom:.75rem">🎯</div>
+          <div style="font-weight:600;margin-bottom:.4rem">No exams scheduled yet</div>
+          <a href="{% url 'exam_add' %}" style="color:#818cf8;font-size:.85rem;text-decoration:none">Schedule your first exam →</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

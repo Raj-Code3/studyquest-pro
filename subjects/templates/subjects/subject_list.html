@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Subjects – StudyQuest Pro{% endblock %}
+{% block content %}
+<div class="page-header d-flex align-items-center justify-content-between fade-up">
+  <div>
+    <h2>📚 My Subjects</h2>
+    <p>Manage your enrolled courses</p>
+  </div>
+  <a href="{% url 'subject_add' %}" class="btn-glow text-decoration-none" style="padding:.65rem 1.25rem">➕ Add Subject</a>
+</div>
+
+<div class="row g-3 fade-up fade-up-1">
+  {% for subject in subjects %}
+  <div class="col-md-4 col-sm-6">
+    <div class="card-g h-100" style="border-top:3px solid {{ subject.color }};position:relative;overflow:hidden">
+      <div style="position:absolute;top:1rem;right:1rem;font-size:2.5rem;opacity:.12">{{ subject.icon }}</div>
+      <div style="margin-bottom:.75rem">
+        <span style="font-size:1.6rem">{{ subject.icon }}</span>
+        <span style="background:{{ subject.color }}22;color:{{ subject.color }};border:1px solid {{ subject.color }}44;border-radius:6px;padding:.2rem .6rem;font-size:.72rem;font-weight:700;margin-left:.5rem">{{ subject.credits }} Credits</span>
+      </div>
+      <h6 style="font-family:'Sora',sans-serif;font-weight:700;font-size:1rem;margin-bottom:.3rem">{{ subject.subject_name }}</h6>
+      {% if subject.teacher_name %}<div style="font-size:.8rem;color:#64748b;margin-bottom:.5rem">👨‍🏫 {{ subject.teacher_name }}</div>{% endif %}
+      {% if subject.description %}<p style="font-size:.82rem;color:#94a3b8;margin-bottom:.75rem;line-height:1.5">{{ subject.description|truncatewords:15 }}</p>{% endif %}
+
+      <div style="display:flex;gap:.5rem;margin-top:auto;padding-top:.75rem;border-top:1px solid #2e3250">
+        <a href="{% url 'subject_edit' subject.pk %}" class="btn-outline-g text-decoration-none" style="flex:1;text-align:center;padding:.5rem;font-size:.82rem">✏️ Edit</a>
+        <a href="{% url 'subject_delete' subject.pk %}" class="btn-danger-g text-decoration-none" style="flex:1;text-align:center;padding:.5rem;font-size:.82rem">🗑️ Delete</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12 fade-up">
+    <div style="text-align:center;padding:4rem 2rem;background:var(--surface);border:2px dashed #2e3250;border-radius:20px">
+      <div style="font-size:4rem;margin-bottom:1rem;opacity:.5">📚</div>
+      <h5 style="color:#64748b;font-weight:600">No subjects yet</h5>
+      <p style="color:#475569;font-size:.9rem;margin-bottom:1.5rem">Add your first subject to start tracking</p>
+      <a href="{% url 'subject_add' %}" class="btn-glow text-decoration-none" style="padding:.7rem 1.5rem">➕ Add Your First Subject</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

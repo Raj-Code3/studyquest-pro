@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>{% block title %}StudyQuest Pro{% endblock %}</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:        #0f1117;
+  --surface:   #1a1d2e;
+  --surface2:  #222539;
+  --border:    #2e3250;
+  --primary:   #6366f1;
+  --primary2:  #818cf8;
+  --accent:    #f59e0b;
+  --teal:      #14b8a6;
+  --pink:      #ec4899;
+  --green:     #10b981;
+  --red:       #ef4444;
+  --text:      #e2e8f0;
+  --muted:     #64748b;
+  --glow:      0 0 20px rgba(99,102,241,.35);
+}
+
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+/* ── Navbar ── */
+.topbar {
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:.75rem 1.5rem;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:100;
+  backdrop-filter:blur(10px);
+}
+.topbar-brand { font-family:'Sora',sans-serif; font-size:1.2rem; font-weight:800;
+  background:linear-gradient(135deg,var(--primary),var(--pink));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.topbar-actions { display:flex; align-items:center; gap:1rem; }
+.topbar-avatar {
+  width:36px; height:36px; border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--pink));
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:.85rem; cursor:pointer;
+  border:2px solid var(--primary);
+}
+.dropdown-menu { background:var(--surface2); border:1px solid var(--border); }
+.dropdown-item { color:var(--text); font-size:.88rem; padding:.6rem 1rem; }
+.dropdown-item:hover { background:var(--border); color:#fff; }
+.dropdown-divider { border-color:var(--border); }
+
+/* ── Sidebar ── */
+.sidebar {
+  width:240px; min-height:calc(100vh - 57px);
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  padding:1.25rem .75rem;
+  position:fixed; top:57px; left:0;
+  overflow-y:auto;
+}
+.sidebar-label { font-size:.65rem; font-weight:700; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.1em; padding:.5rem .75rem .25rem; }
+.nav-item-s { margin-bottom:2px; }
+.nav-link-s {
+  display:flex; align-items:center; gap:.65rem;
+  padding:.6rem .85rem; border-radius:10px;
+  color:var(--muted); font-size:.88rem; font-weight:500;
+  text-decoration:none; transition:all .2s;
+}
+.nav-link-s:hover  { background:var(--surface2); color:var(--text); }
+.nav-link-s.active { background:linear-gradient(135deg,rgba(99,102,241,.25),rgba(236,72,153,.15));
+  color:var(--primary2); border:1px solid rgba(99,102,241,.3); }
+.nav-link-s .icon  { font-size:1.1rem; width:22px; text-align:center; }
+
+/* ── Main content ── */
+.main-wrap { margin-left:240px; padding:2rem; min-height:calc(100vh - 57px); }
+
+/* ── Cards ── */
+.card-g {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px; padding:1.5rem;
+  transition:border-color .25s, transform .2s;
+}
+.card-g:hover { border-color:var(--primary); transform:translateY(-2px); }
+
+.stat-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px; padding:1.4rem 1.2rem;
+  position:relative; overflow:hidden;
+  transition:all .25s;
+}
+.stat-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background:var(--gradient,linear-gradient(90deg,var(--primary),var(--pink)));
+}
+.stat-card:hover { border-color:var(--primary); box-shadow:var(--glow); transform:translateY(-3px); }
+.stat-icon { font-size:2.2rem; margin-bottom:.5rem; }
+.stat-val  { font-family:'Sora',sans-serif; font-size:2rem; font-weight:800; line-height:1; }
+.stat-lbl  { font-size:.78rem; color:var(--muted); margin-top:.3rem; font-weight:500; }
+
+/* ── Badges ── */
+.badge-glow { padding:.35rem .8rem; border-radius:20px; font-size:.75rem; font-weight:600; }
+.badge-critical { background:rgba(239,68,68,.15); color:#f87171; border:1px solid rgba(239,68,68,.3); }
+.badge-high     { background:rgba(245,158,11,.15); color:#fbbf24; border:1px solid rgba(245,158,11,.3); }
+.badge-medium   { background:rgba(99,102,241,.15);  color:#818cf8; border:1px solid rgba(99,102,241,.3); }
+.badge-low      { background:rgba(16,185,129,.15);  color:#34d399; border:1px solid rgba(16,185,129,.3); }
+.badge-completed  { background:rgba(16,185,129,.15); color:#34d399; border:1px solid rgba(16,185,129,.3); }
+.badge-pending    { background:rgba(245,158,11,.15); color:#fbbf24; border:1px solid rgba(245,158,11,.3); }
+.badge-in-progress{ background:rgba(99,102,241,.15); color:#818cf8; border:1px solid rgba(99,102,241,.3); }
+
+/* ── Tables ── */
+.table-dark-g { width:100%; border-collapse:separate; border-spacing:0; }
+.table-dark-g th {
+  background:var(--surface2); color:var(--muted);
+  font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+  padding:.75rem 1rem; border-bottom:1px solid var(--border);
+}
+.table-dark-g td { padding:.75rem 1rem; border-bottom:1px solid var(--border); font-size:.88rem; color:var(--text); vertical-align:middle; }
+.table-dark-g tr:last-child td { border-bottom:none; }
+.table-dark-g tr:hover td { background:rgba(255,255,255,.02); }
+
+/* ── Buttons ── */
+.btn-glow {
+  background:linear-gradient(135deg,var(--primary),#4f46e5);
+  color:#fff; border:none; border-radius:10px; padding:.6rem 1.2rem;
+  font-weight:600; font-size:.88rem; cursor:pointer;
+  transition:all .2s; box-shadow:0 4px 15px rgba(99,102,241,.3);
+}
+.btn-glow:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(99,102,241,.45); color:#fff; }
+.btn-outline-g {
+  background:transparent; color:var(--muted); border:1px solid var(--border);
+  border-radius:10px; padding:.55rem 1.1rem; font-size:.88rem; font-weight:500;
+  transition:all .2s; cursor:pointer;
+}
+.btn-outline-g:hover { border-color:var(--primary); color:var(--primary2); }
+.btn-danger-g {
+  background:rgba(239,68,68,.15); color:#f87171; border:1px solid rgba(239,68,68,.3);
+  border-radius:10px; padding:.55rem 1.1rem; font-size:.88rem; font-weight:500; transition:all .2s;
+}
+.btn-danger-g:hover { background:rgba(239,68,68,.3); }
+.btn-success-g {
+  background:rgba(16,185,129,.15); color:#34d399; border:1px solid rgba(16,185,129,.3);
+  border-radius:10px; padding:.55rem 1.1rem; font-size:.88rem; font-weight:500; transition:all .2s;
+}
+.btn-success-g:hover { background:rgba(16,185,129,.3); }
+
+/* ── Forms ── */
+.form-control, .form-select {
+  background:var(--surface2) !important; border:1px solid var(--border) !important;
+  color:var(--text) !important; border-radius:10px !important; padding:.65rem 1rem !important;
+  font-size:.9rem !important; transition:border-color .2s, box-shadow .2s;
+}
+.form-control:focus, .form-select:focus {
+  border-color:var(--primary) !important;
+  box-shadow:0 0 0 3px rgba(99,102,241,.2) !important;
+  outline:none !important;
+}
+.form-control::placeholder { color:var(--muted) !important; }
+label { color:var(--muted); font-size:.8rem; font-weight:600;
+  text-transform:uppercase; letter-spacing:.05em; margin-bottom:.4rem; display:block; }
+
+/* ── XP Bar ── */
+.xp-bar-wrap { background:var(--surface2); border-radius:20px; height:8px; overflow:hidden; }
+.xp-bar-fill { height:100%; border-radius:20px;
+  background:linear-gradient(90deg,var(--primary),var(--pink)); transition:width .5s; }
+
+/* ── Progress ring ── */
+.progress-ring { transform:rotate(-90deg); }
+.progress-ring-bg { fill:none; stroke:var(--surface2); stroke-width:6; }
+.progress-ring-fill { fill:none; stroke:url(#grad); stroke-width:6;
+  stroke-linecap:round; transition:stroke-dashoffset .6s; }
+
+/* ── Alerts ── */
+.alert-dark-g {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:12px; padding:.85rem 1.1rem; font-size:.88rem;
+  display:flex; align-items:center; gap:.6rem; margin-bottom:.75rem;
+}
+.alert-success-g { border-color:rgba(16,185,129,.4); background:rgba(16,185,129,.08); color:#34d399; }
+.alert-danger-g  { border-color:rgba(239,68,68,.4);  background:rgba(239,68,68,.08);  color:#f87171; }
+.alert-info-g    { border-color:rgba(99,102,241,.4);  background:rgba(99,102,241,.08); color:#818cf8; }
+.alert-warning-g { border-color:rgba(245,158,11,.4); background:rgba(245,158,11,.08); color:#fbbf24; }
+
+/* ── Page header ── */
+.page-header { margin-bottom:1.75rem; }
+.page-header h2 { font-family:'Sora',sans-serif; font-size:1.6rem; font-weight:800; }
+.page-header p  { color:var(--muted); font-size:.88rem; margin-top:.2rem; }
+
+/* ── Subject color dot ── */
+.subject-dot { width:10px; height:10px; border-radius:50%; display:inline-block; margin-right:.4rem; }
+
+/* ── Responsive ── */
+@media(max-width:768px) {
+  .sidebar { display:none; }
+  .main-wrap { margin-left:0; padding:1rem; }
+}
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.fade-up { animation:fadeUp .4s ease both; }
+.fade-up-1 { animation-delay:.05s; }
+.fade-up-2 { animation-delay:.1s; }
+.fade-up-3 { animation-delay:.15s; }
+.fade-up-4 { animation-delay:.2s; }
+
+/* ── Glow text ── */
+.text-gradient {
+  background:linear-gradient(135deg,var(--primary2),var(--pink));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+</style>
+</head>
+<body>
+
+{% if user.is_authenticated %}
+<!-- Topbar -->
+<div class="topbar">
+  <div class="d-flex align-items-center gap-3">
+    <button class="btn btn-sm d-md-none" style="background:var(--surface2);border:1px solid var(--border);color:var(--text)" data-bs-toggle="collapse" data-bs-target="#mob-sidebar">
+      <i class="bi bi-list"></i>
+    </button>
+    <span class="topbar-brand">🎮 StudyQuest</span>
+  </div>
+  <div class="topbar-actions">
+    {% if user.profile.xp_points is not None %}
+    <div class="d-none d-md-flex align-items-center gap-2" style="font-size:.8rem;color:var(--muted)">
+      <span>⚡ {{ user.profile.xp_points }} XP</span>
+      <span class="badge-glow badge-medium">Lv.{{ user.profile.level }}</span>
+    </div>
+    {% endif %}
+    <div class="dropdown">
+      <div class="topbar-avatar dropdown-toggle" data-bs-toggle="dropdown">
+        {% if user.profile.profile_picture %}
+          <img src="{{ user.profile.profile_picture.url }}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>
+        {% else %}
+          {{ user.username|first|upper }}
+        {% endif %}
+      </div>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><h6 class="dropdown-header" style="color:var(--muted)">{{ user.get_full_name|default:user.username }}</h6></li>
+        <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="bi bi-person me-2"></i>Profile</a></li>
+        <li><a class="dropdown-item" href="{% url 'change_password' %}"><i class="bi bi-key me-2"></i>Change Password</a></li>
+        <li><a class="dropdown-item" href="/admin/" target="_blank"><i class="bi bi-gear me-2"></i>Admin Panel</a></li>
+        <li><hr class="dropdown-divider"/></li>
+        <li><a class="dropdown-item" href="{% url 'logout' %}" style="color:#f87171"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar d-none d-md-block">
+  <div class="sidebar-label">Main Menu</div>
+  <ul class="list-unstyled">
+    <li class="nav-item-s"><a class="nav-link-s {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}"><span class="icon">🏠</span> Dashboard</a></li>
+    <li class="nav-item-s"><a class="nav-link-s {% if 'subject' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'subject_list' %}"><span class="icon">📚</span> Subjects</a></li>
+    <li class="nav-item-s"><a class="nav-link-s {% if 'task' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'task_list' %}"><span class="icon">⚔️</span> Quests</a></li>
+    <li class="nav-item-s"><a class="nav-link-s {% if 'exam' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'exam_list' %}"><span class="icon">🎯</span> Exams</a></li>
+  </ul>
+  <div class="sidebar-label mt-3">Account</div>
+  <ul class="list-unstyled">
+    <li class="nav-item-s"><a class="nav-link-s {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'profile' %}"><span class="icon">👤</span> Profile</a></li>
+    <li class="nav-item-s"><a class="nav-link-s" href="/admin/" target="_blank"><span class="icon">⚙️</span> Admin</a></li>
+    <li class="nav-item-s"><a class="nav-link-s" href="{% url 'logout' %}" style="color:#f87171"><span class="icon">🚪</span> Logout</a></li>
+  </ul>
+
+  {% if user.profile %}
+  <div style="margin-top:auto;padding:1rem .5rem 0">
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem">
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:.4rem">⚡ XP Progress</div>
+      <div style="font-size:.88rem;font-weight:700;color:var(--primary2);margin-bottom:.5rem">
+        {{ user.profile.xp_points }} / {{ user.profile.level|add:"0" }}00 XP
+      </div>
+      <div class="xp-bar-wrap">
+        <div class="xp-bar-fill" style="width:{{ user.profile.xp_points|default:0 }}%"></div>
+      </div>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:.4rem">{{ user.profile.get_level_title }}</div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<div class="main-wrap">
+{% else %}
+<div style="min-height:100vh">
+{% endif %}
+
+  <!-- Flash messages -->
+  {% if messages %}
+  <div style="{% if user.is_authenticated %}{% else %}max-width:500px;margin:0 auto;padding:1rem{% endif %}">
+    {% for msg in messages %}
+    <div class="alert-dark-g alert-{% if msg.tags == 'error' %}danger{% elif msg.tags == 'success' %}success{% elif msg.tags == 'info' %}info{% else %}warning{% endif %}-g">
+      {{ msg }}
+      <button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;color:inherit;cursor:pointer;font-size:1rem">×</button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

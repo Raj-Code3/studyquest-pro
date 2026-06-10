@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Delete Exam{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-4">
+  <div class="col-md-5 fade-up">
+    <div class="card-g text-center" style="border:1px solid rgba(239,68,68,.3)">
+      <div style="font-size:4rem;margin-bottom:1rem">🗑️</div>
+      <h5 style="font-family:'Sora',sans-serif;font-weight:800;color:#f87171">Delete Exam</h5>
+      <p style="color:#94a3b8;font-size:.9rem;margin:1rem 0">Delete <strong style="color:#e2e8f0">{{ object }}</strong>?<br/><span style="font-size:.82rem;color:#64748b">This cannot be undone.</span></p>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="d-flex gap-2 justify-content-center mt-2">
+          <button type="submit" class="btn-danger-g" style="padding:.7rem 1.5rem;cursor:pointer;border:none">🗑️ Delete</button>
+          <a href="javascript:history.back()" class="btn-outline-g text-decoration-none" style="padding:.7rem 1.5rem;display:inline-flex;align-items:center;color:var(--muted)">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
