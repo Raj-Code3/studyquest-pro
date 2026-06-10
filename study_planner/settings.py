@@ -5,6 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-studyplanner-pro-2024'
 DEBUG = False
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://web-production-a794e.up.railway.app']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
